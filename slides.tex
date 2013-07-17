@@ -1,5 +1,8 @@
 \documentclass{beamer}
 \usepackage{fontspec}
+\usepackage{minted}
+\usepackage{tango}
+
 \mode<presentation>{\usetheme{Copenhagen}}
 \title{Using static typing features for fun and profit}
 \author{Marek~Kubica}
@@ -8,8 +11,9 @@
 
 \setsansfont{Yanone Kaffeesatz Regular}
 \setmainfont{EB Garamond}
-\setmonofont{Droid Sans Mono Dotted}
+\setmonofont[Scale=0.8]{Droid Sans Mono Dotted}
 
+\usemintedstyle{tango}
 \usecolortheme{rwo}
 \setbeamerfont{title}{family=\rmfamily}
 %\setbeamertemplate{blocks}[rounded=false]
@@ -34,4 +38,33 @@
     too, so put your flamewar away (for now).
   \end{alertblock}
 \end{frame}
+
+\begin{frame}[fragile]{Static typing the C way}
+  Let's check how C handles look like. How about checking libarchive.
+  \begin{minted}{c}
+    __LA_DECL struct archive* archive_read_new(void);
+    __LA_DECL struct archive* archive_write_new(void);
+  \end{minted}
+  \begin{itemize}
+    \item Opaque pointer to some struct
+    \item Write handles and read handles have the same type
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  So, what can we do with these handles?
+  \pause
+  \begin{itemize}
+    \item Create them
+    \item Open them
+    \item Read from them
+    \item Write from them
+    \item Close them
+  \end{itemize}
+  \pause
+  Cool.
+  \pause
+  \alert{But what if we screw up?}
+\end{frame}
+
 \end{document}

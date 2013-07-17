@@ -4,6 +4,6 @@ all:
 watch:
 	$(MAKE) all
 	while true; do \
-		inotifywait -q -e modify *.tex ; \
+		inotifywait -q -e modify *.tex *.sty ; \
 		$(MAKE) all ; \
 	done
