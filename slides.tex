@@ -270,8 +270,38 @@ Couldn't we \example{encode the state} in the type somehow?
   * if you haven't seen them, think of them kinda like generics
 \end{frame}
 
-\begin{frame}{Open types}
-  TODO
+\begin{frame}[fragile]{Aside: Open union types}
+  So, now we can \example{parametrize types with other types}.
+
+  We could create our own state types:
+  \begin{minted}[gobble=4]{ocaml}
+    type state = New | Configured | Opened | Closed
+  \end{minted}
+  \pause
+  But these \alert{can't be extended} if someone wants to add a new state.
+  \pause
+  \vspace{2ex}
+
+  Plus, we're lazy.
+  \begin{minted}[gobble=4]{ocaml}
+    `New `Configured `Opened `Closed
+  \end{minted}
+  Let's use open union types aka polymorphic variants.
+\end{frame}
+
+\begin{frame}
+  Great, so now we can create functions that take handles of the correct state.
+
+  e.g. a read function that only works on \texttt{`Opened ReadHandle}
+
+  \alert{Foiled again!}
+
+  The OCaml is too smart, it knows that \texttt{`Opened ReadHandle} is the
+  same type as \texttt{`New ReadHandle} therefore every function which takes
+  the \texttt{`Opened} handle takes every other type too
+\end{frame}
+
+\begin{frame}{Enter phantoms}
 \end{frame}
 
 \end{document}
