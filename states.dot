@@ -1,0 +1,12 @@
+digraph fsm {
+  rankdir=LR;
+  fixedsize=true;
+  node [shape = doublecircle, width=.5]; New;
+  node [shape = circle, width=.5];
+  New [label="   New   "];
+  Opened [label="  Opened  "];
+  Closed [label="  Closed  "];
+  New -> Configured
+  Configured -> Opened
+  Opened -> Closed
+}

@@ -1,8 +1,9 @@
-\documentclass[handout]{beamer}
+\documentclass{beamer}
 \usepackage{fontspec}
 \usepackage{minted}
 \usepackage{tango}
 \usepackage{ccicons}
+\usepackage{tikz}
 
 \mode<presentation>{\usetheme{Copenhagen}}
 \title{Using static typing features for fun and profit}
@@ -55,6 +56,20 @@
     I am neither a static typing weenie, I like dynamically typed languages
     too, so put your flamewar away (for now).
   \end{alertblock}
+  \begin{exampleblock}{Comments}
+    If you have comments, feel free to ask in the middle. But let's try to
+    avoid big detours from the topic, alrite?
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}{What is the plan?}
+  \begin{itemize}
+    \item Data compression support in OCaml is… kinda meh
+    \item I was tasked to write some code to improve it
+    \item Using OCaml FFI to interface to libarchive
+    \item Thought I might as well create a better API
+    \item Here to tell you about some cool things possible
+  \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]{Static typing the C way}
@@ -76,7 +91,7 @@
     \item Create them
     \item Open them
     \item Read from them
-    \item Write from them
+    \item Write to them
     \item Close them
   \end{itemize}
   \pause
@@ -166,6 +181,97 @@ zsh: abort (core dumped)  ./errors foo
     \pause
     {\scriptsize (obviously)}
   \end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Fix up the handle types}
+  How to prevent writing to read handles and reading from write handles?
+  \begin{minted}[gobble=4]{ocaml}
+    external read_new: unit -> archive = "ost_read_new"
+    external write_new: unit -> archive = "ost_write_new"
+  \end{minted}
+  \pause
+  Yup, create different handle types.
+  \begin{minted}[gobble=4]{ocaml}
+    type r = archive
+    type w = (archive * write_buffer_ptr * written_ptr)
+  \end{minted}
+  So now we have two different types to represent handles.
+\end{frame}
+
+\begin{frame}{Archivement unlocked}
+  \begin{center}
+    {\Huge Type safety improved!}
+  \end{center}
+  But of course you aren't attending the talk for this \alert{trivial}
+  epiphany. We can do this easily in C as well! Let's do better.
+\end{frame}
+
+\begin{frame}[fragile]{Our handles have states!}
+  The handles always traverse some fixed states:
+\begin{center}
+% dot2tex --figonly states.dot
+\begin{tikzpicture}[>=latex,line join=bevel,scale=0.6]
+  \pgfsetlinewidth{1bp}
+%%
+\pgfsetcolor{black}
+  % Edge: New -> Configured
+  \draw [->] (92.45bp,50bp) .. controls (100.74bp,50bp) and (109.5bp,50bp)  .. (128.16bp,50bp);
+  % Edge: Opened -> Closed
+  \draw [->] (362.29bp,50bp) .. controls (370.61bp,50bp) and (379.33bp,50bp)  .. (398.03bp,50bp);
+  % Edge: Configured -> Opened
+  \draw [->] (229.9bp,50bp) .. controls (238.38bp,50bp) and (247.24bp,50bp)  .. (265.9bp,50bp);
+  % Node: New
+\begin{scope}
+  \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+  \pgfsetstrokecolor{strokecol}
+  \draw (46bp,50bp) ellipse (42bp and 42bp);
+  \draw (46bp,50bp) ellipse (46bp and 46bp);
+  \draw (46bp,50bp) node {   New};
+\end{scope}
+  % Node: Configured
+\begin{scope}
+  \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+  \pgfsetstrokecolor{strokecol}
+  \draw (179bp,50bp) ellipse (51bp and 51bp);
+  \draw (179bp,50bp) node {Configured};
+\end{scope}
+  % Node: Opened
+\begin{scope}
+  \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+  \pgfsetstrokecolor{strokecol}
+  \draw (314bp,50bp) ellipse (48bp and 48bp);
+  \draw (314bp,50bp) node {  Opened};
+\end{scope}
+  % Node: Closed
+\begin{scope}
+  \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+  \pgfsetstrokecolor{strokecol}
+  \draw (443bp,50bp) ellipse (45bp and 45bp);
+  \draw (443bp,50bp) node {  Closed};
+\end{scope}
+%
+\end{tikzpicture}
+\end{center}
+Couldn't we \example{encode the state} in the type somehow?
+\end{frame}
+
+\begin{frame}[fragile]{Adding state information in the type}
+  We can add state. OCaml has parametrized types *:
+
+  \begin{minted}[gobble=4]{ocaml}
+    # [];;
+    - : 'a list = []
+    # [1];;
+    - : int list = [1]
+    # type 'a handle = ReadHandle of 'a;;
+    type 'a handle = ReadHandle of 'a
+  \end{minted}
+
+  * if you haven't seen them, think of them kinda like generics
+\end{frame}
+
+\begin{frame}{Open types}
+  TODO
 \end{frame}
 
 \end{document}
