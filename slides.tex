@@ -263,8 +263,8 @@ Couldn't we \example{encode the state} in the type somehow?
     - : 'a list = []
     # [1];;
     - : int list = [1]
-    # type 'a handle = ReadHandle of 'a;;
-    type 'a handle = ReadHandle of 'a
+    # type 'a read_handle = ReadHandle of 'a;;
+    type 'a read_handle = ReadHandle of 'a
   \end{minted}
 
   * if you haven't seen them, think of them kinda like generics
@@ -284,7 +284,7 @@ Couldn't we \example{encode the state} in the type somehow?
 
   Plus, we're lazy.
   \begin{minted}[gobble=4]{ocaml}
-    `New `Configured `Opened `Closed
+    [`New] [`Configured] [`Opened] [`Closed]
   \end{minted}
   Let's use open union types aka polymorphic variants.
 \end{frame}
@@ -292,16 +292,34 @@ Couldn't we \example{encode the state} in the type somehow?
 \begin{frame}
   Great, so now we can create functions that take handles of the correct state.
 
-  e.g. a read function that only works on \texttt{`Opened ReadHandle}
+  e.g. a read function that only works on \texttt{[`Opened] read\_handle}.
 
+  \pause
   \alert{Foiled again!}
+  \pause
 
-  The OCaml is too smart, it knows that \texttt{`Opened ReadHandle} is the
-  same type as \texttt{`New ReadHandle} therefore every function which takes
-  the \texttt{`Opened} handle takes every other type too
+  The OCaml compiler is too smart, it knows that \texttt{[`Opened] read\_handle} is the
+  same type as \texttt{[`New] read\_handle} therefore every function which takes
+  the \texttt{[`Opened]} handle takes every other type too.
 \end{frame}
 
-\begin{frame}{Enter phantoms}
+\begin{frame}[fragile]{Enter phantoms}
+  \pause
+  Let's hide the actual \texttt{read\_handle} type from the compiler.
+
+  We create a module and only say:
+
+  \begin{minted}{ocaml}
+  module Handle : sig
+    type 'a r
+    (* our signatures *)
+    val new : unit -> [`New] r
+  end = struct
+    type 'a r = read_handle
+    (* our functions *)
+    external new : unit -> [`Open] r = "ost_read_new"
+  end
+  \end{minted}
 \end{frame}
 
 \end{document}
