@@ -4,6 +4,8 @@
 \usepackage{tango}
 \usepackage{ccicons}
 \usepackage{tikz}
+\usepackage[normalem]{ulem}
+\usepackage{csquotes}
 
 \mode<presentation>{\usetheme{Copenhagen}}
 \title{Using static typing features for fun and profit}
@@ -22,28 +24,75 @@
 %\useinnertheme{default}
 \setbeamertemplate{title page}[default][colsep=-0bp,rounded=false,shadow=\beamer@themerounded@shadow]
 
+\setlength{\parskip}{8pt plus 1pt minus 1pt}
+
 %% get rid of navigation symbols
 %\setbeamertemplate{navigation symbols}{}
 \beamertemplatenavigationsymbolsempty
 
-\renewcommand{\example}[1]{{\usebeamercolor[fg]{example text} #1}}
+%\titlegraphic{\includegraphics[width=\textwidth]{nightingdale}}
 
-\begin{document}
-
-%\frame{\titlepage
-%\ccby
+%\defbeamertemplate*{title page}{rwo}[1][]
+%{
+%  \usebeamerfont{title}\inserttitle\par
+%  \usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par
+%  \bigskip
+%  \usebeamerfont{author}\insertauthor\par
+%  \usebeamerfont{institute}\insertinstitute\par
+%  \usebeamerfont{date}\insertdate\par
+%  \usebeamercolor[fg]{titlegraphic}\inserttitlegraphic
 %}
 
-\frame{
-  \titlepage
+\defbeamertemplate*{title page}{rwo}[1][]
+{
+  \vbox{}
   \vfill
-  \begin{center}
-    \ccby{}\\[0.5ex]
+  \begin{centering}
+    \begin{beamercolorbox}[sep=8pt,center,#1]{title}
+      \usebeamerfont{title}\inserttitle\par%
+      \ifx\insertsubtitle\@empty%
+      \else%
+        \vskip0.25em%
+        {\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par}%
+      \fi%     
+    \end{beamercolorbox}%
+  \end{centering}
+    \vskip1em\par
+    \begin{beamercolorbox}[sep=3pt,#1]{author}
+      \usebeamerfont{author}\insertauthor
+    \end{beamercolorbox}
+    \begin{beamercolorbox}[sep=3pt,#1]{institute}
+      \usebeamerfont{institute}\insertinstitute
+    \end{beamercolorbox}
+    \begin{beamercolorbox}[sep=3pt,#1]{date}
+      \usebeamerfont{date}\insertdate
+    \end{beamercolorbox}\vskip0.5em
+    {\usebeamercolor[fg]{titlegraphic}\inserttitlegraphic\par}
+  %\vfill
+  \vskip4.0em
+  %\begin{center}
+    \ccby{}\\
     {\tiny This work is licensed under a
     \href{http://creativecommons.org/licenses/by/3.0/deed.en_US}%
     {Creative Commons Attribution 3.0 Unported License}.}
     \vspace*{-2.5ex}
-  \end{center}
+  %\end{center}
+}
+
+
+\renewcommand{\example}[1]{{\usebeamercolor[fg]{example text} #1}}
+\renewcommand{\ULthickness}[0]{0.23ex}
+
+\begin{document}
+
+{
+\usebackgroundtemplate%
+{%
+    \includegraphics[width=\paperwidth,height=\paperheight]{nightingdale}%
+}
+\frame{
+  \titlepage
+}
 }
 
 
@@ -305,10 +354,15 @@ Couldn't we \example{encode the state} in the type somehow?
 
 \begin{frame}[fragile]{Enter phantoms}
   \pause
-  Let's hide the actual \texttt{read\_handle} type from the compiler.
+  We'd need to \alert{hide} the actual \texttt{read\_handle} type from the compiler.
+
+  \pause
+
+  Boy oh boy, \example{we can!}
+
+  \pause
 
   We create a module and only say:
-
   \begin{minted}{ocaml}
   module Handle : sig
     type 'a r
@@ -328,6 +382,151 @@ Couldn't we \example{encode the state} in the type somehow?
   \end{center}
   [TODO Checkbox] Writing read handles disallowed
   [TODO Checkbox] Using the proper handle in an incorrect way disallowed
+\end{frame}
+
+\begin{frame}
+  \begin{center}
+    {\Huge And now for something completely different!}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Have you ever seen this?}
+  Ever used Python?
+  \begin{minted}[gobble=4]{text}
+    Traceback (most recent call last):
+    File "<stdin>", line 1, in <module>
+    AttributeError: 'NoneType' object has no attribute 'foo'
+  \end{minted}
+  \pause
+  Ever touched Java?
+  \begin{minted}[gobble=4]{text}
+    Exception in thread "main" java.lang.NullPointerException
+    at NPE.main(NPE.java:8)
+  \end{minted}
+  \pause
+  Ever seen C?
+  \begin{minted}[gobble=4]{text}
+    zsh: segmentation fault (core dumped)  ./errors
+  \end{minted}
+\end{frame}
+
+\begin{frame}{You know whose fault it is!}
+  \begin{itemize}
+    \item \texttt{null}
+    \item \texttt{None}
+    \item \texttt{NULL}
+  \end{itemize}
+  \pause
+  Everytime you return null as a placeholder value, 
+  \sout{\textdollar{}DEITY kills a kitten}
+  you have to check whether you weren't handed null in return.
+\end{frame}
+
+\begin{frame}
+  \begin{center}
+    {\Huge Let's kill the \sout{Batman} Null pointer!}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Attempt one: Exceptions}
+  \begin{itemize}
+    \item Common solution
+    \item Ubiquitous (Java, Python, C++, Ruby, whathaveyou)
+    \item Easy to understand
+    \item OCaml does have exceptions
+    \pause
+    \item \alert{Not typesafe}, unless you consider checked exceptions
+    \item Boring!
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Attempt two: Option types}
+  Observation: everythime we return NULL, we either return something
+  meaningful or an invalid placeholder.
+
+  We might even say:
+  \begin{minted}[gobble=4]{ocaml}
+    type 'a option = Some of 'a | None
+  \end{minted}
+
+  \pause
+
+  Therefore, everytime a function returns \texttt{'a option} we have
+  to pattern match:
+  \begin{minted}[gobble=4]{ocaml}
+    let optional x = Some x
+    match optional 42 with
+      | Some x -> x
+      | None -> 0
+  \end{minted}
+
+  \pause
+
+  If we forget:
+  \begin{minted}[gobble=4]{text}
+    Warning 8: this pattern-matching is not exhaustive.
+    Here is an example of a value that is not matched:
+    None
+  \end{minted}
+\end{frame}
+
+\begin{frame}{Achivement unlocked!}
+  \begin{center}
+    {\Huge Forgetting to check for NULL is a type error!}
+  \end{center}
+  [TODO checkbox] No more Null pointer failures on runtime!
+\end{frame}
+
+\begin{frame}[fragile]
+  Everything is fun and games until you need to specify a reason for
+  failure.
+
+  What if we could add an error message?
+  \begin{minted}[gobble=4]{ocaml}
+    type ('a, 'b) err = Success of 'a | Failure of 'b
+  \end{minted}
+  Done!
+\end{frame}
+
+\begin{frame}[fragile]
+  But pattern matching on every function call sucks because it is
+  \alert{tedious}! Just look at this mess:
+  \begin{minted}[gobble=4]{ocaml}
+    match firstfn 42 with 
+      | Success (x) -> (match secondfn x with
+        | Success (y) -> (match thirdfn y with
+          | Success (z) -> z
+          | Failure (f3) -> "Failure at thirdfn")
+        | Failure (f2) -> "Failure at secondfn")
+      | Failure (f1) -> "Failure at fristfn"
+  \end{minted}
+
+  Right. Maybe we can simplify.
+
+  So I was reading \enquote{Real World Haskell} at that time, turns out
+  \texttt{option} is called \enquote{Maybe monad} and \texttt{error}
+  is called \enquote{Error monad} there.
+
+  \pause
+  \begin{center}
+    {\Large \alert{BAM, SCARY MONADS!}}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  So I was reading \enquote{Seven Languages in Seven Weeks}.
+
+  It introduces an operator called \texttt{bind} aka \texttt{>>=} to
+  chain monads.
+\end{frame}
+
+% last slide, in any case
+% TODO: make this awful slide less ugly
+\begin{frame}{Follow me}
+  \begin{block}{Leonidas}
+    \href{https://github.com/Leonidas-from-XIV}{Leonidas-from-XIV} on GitHub\\
+    \url{http://xivilization.net/}
+  \end{block}
 \end{frame}
 
 \end{document}

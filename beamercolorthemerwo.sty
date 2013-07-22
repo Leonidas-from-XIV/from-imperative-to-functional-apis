@@ -13,8 +13,7 @@
 %\setbeamercolor{titlelike}{bg=logoyellow,fg=darkgreycolor}
 %\setbeamercolor{frametitle}{bg=white,fg=darkgreycolor}
 
-%%\setbeamercolor{structure}{fg=logoblue}
-\setbeamercolor{block title}{bg=logoblue,fg=logoyellow}
+\setbeamercolor{block title}{bg=plumB,fg=aluminiumA}
 \setbeamercolor{block title alerted}{bg=scarletredB,fg=white}
 \setbeamercolor{block body alerted}{bg=scarletredB!30!white,fg=aluminiumF}
 
@@ -33,14 +32,16 @@
 \setbeamercolor{alerted text}{fg=scarletredA}
 
 % default split outer theme with slide numbers inserted
+% you might ask why this is in a color scheme file, and that'd be a valid question
 \defbeamertemplate*{footline}{rwo theme}
 {%
   \leavevmode%
   \hbox{\begin{beamercolorbox}[wd=.5\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=.3cm plus1fill,rightskip=.3cm]{author in head/foot}%
-    \usebeamerfont{author in head/foot}\insertshortauthor
+    %\usebeamerfont{author in head/foot}\insertshortauthor
   \end{beamercolorbox}%
   \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=.3cm,rightskip=.3cm plus1fil]{title in head/foot}%
-    \usebeamerfont{title in head/foot}\insertshorttitle\hfill\insertframenumber\,/\,\inserttotalframenumber
+    %\usebeamerfont{title in head/foot}\insertshorttitle
+    \usebeamerfont{title in head/foot}\hfill\insertframenumber\,/\,\inserttotalframenumber
   \end{beamercolorbox}}%
   \vskip0pt%
 }
