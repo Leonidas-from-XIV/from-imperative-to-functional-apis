@@ -513,11 +513,60 @@ Couldn't we \example{encode the state} in the type somehow?
   \end{center}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
   So I was reading \enquote{Seven Languages in Seven Weeks}.
 
   It introduces an operator called \texttt{bind} aka \texttt{>>=} to
-  chain monads.
+  chain operations on monads.
+
+  \begin{minted}[gobble=4]{ocaml}
+    val bind: 'a ErrorMonad.t -> ('a -> 'b ErrorMonad.t) ->
+      'b ErrorMonad.t
+  \end{minted}
+
+  It takes an error monad wrapping type \texttt{'a}, and a function
+  which takes \texttt{'a} and returns an error monad wrapping
+  \texttt{'b} and returns that value.
+\end{frame}
+
+\begin{frame}[fragile]
+  For the error monad, it looks like this:
+  \begin{minted}[gobble=4]{ocaml}
+    let bind m f = match m with
+      | Success(x) -> f x
+      | Failure(f) -> Failure(f)
+  \end{minted}
+
+  We can use it like this:
+
+  \begin{minted}[gobble=4]{ocaml}
+    match (bind (bind (firstfn 42) secondfn) thirdfn) with
+      | Success (x) -> x
+      | Failure (_) -> "Failure in chain"
+  \end{minted}
+  The code got a lot easier!
+\end{frame}
+
+\begin{frame}[fragile]{Aside: Operator tricks}
+  OCaml allows custom operators as long as they follow naming rules.
+
+  \begin{minted}[gobble=4]{ocaml}
+    let (>>=) = bind
+  \end{minted}
+
+  \begin{minted}[gobble=4]{ocaml}
+    match (firstfn 42) >>= secondfn >>= thirdfn with
+      | Success (x) -> x
+      | Failure (_) -> "Failure in chain"
+  \end{minted}
+\end{frame}
+
+\begin{frame}{Achivement unlocked!}
+  \begin{center}
+    {\Huge Statically typed error handling}
+  \end{center}
+  [TODO checkbox] No more Null pointer failures on runtime!
+  [TODO checkbox] Easy and convenient to get reason of failure
 \end{frame}
 
 % last slide, in any case
