@@ -35,3 +35,6 @@
 *.pyg
 *.bcf
 *.run.xml
+*.png
+errors
+*.class
