@@ -6,6 +6,7 @@
 \usepackage{tikz}
 \usepackage[normalem]{ulem}
 \usepackage{csquotes}
+\usepackage{amssymb}
 
 \mode<presentation>{\usetheme{Copenhagen}}
 \title{Using static typing features for fun and profit}
@@ -247,10 +248,12 @@ zsh: abort (core dumped)  ./errors foo
   So now we have two different types to represent handles.
 \end{frame}
 
-\begin{frame}{Archivement unlocked}
+\begin{frame}{Achivement unlocked!}
   \begin{center}
     {\Huge Type safety improved!}
   \end{center}
+  \checkmark Writing read handles disallowed
+
   But of course you aren't attending the talk for this \alert{trivial}
   epiphany. We can do this easily in C as well! Let's do better.
 \end{frame}
@@ -353,7 +356,6 @@ Couldn't we \example{encode the state} in the type somehow?
 \end{frame}
 
 \begin{frame}[fragile]{Enter phantoms}
-  \pause
   We'd need to \alert{hide} the actual \texttt{read\_handle} type from the compiler.
 
   \pause
@@ -380,8 +382,8 @@ Couldn't we \example{encode the state} in the type somehow?
   \begin{center}
     {\Huge Made API misuse a type error!}
   \end{center}
-  [TODO Checkbox] Writing read handles disallowed
-  [TODO Checkbox] Using the proper handle in an incorrect way disallowed
+  \checkmark Writing read handles disallowed\\
+  \checkmark Using the proper handle in an incorrect way disallowed
 \end{frame}
 
 \begin{frame}
@@ -474,7 +476,7 @@ Couldn't we \example{encode the state} in the type somehow?
   \begin{center}
     {\Huge Forgetting to check for NULL is a type error!}
   \end{center}
-  [TODO checkbox] No more Null pointer failures on runtime!
+  \checkmark No more Null pointer failures on runtime!
 \end{frame}
 
 \begin{frame}[fragile]
@@ -565,8 +567,8 @@ Couldn't we \example{encode the state} in the type somehow?
   \begin{center}
     {\Huge Statically typed error handling}
   \end{center}
-  [TODO checkbox] No more Null pointer failures on runtime!
-  [TODO checkbox] Easy and convenient to get reason of failure
+  \checkmark No more Null pointer failures on runtime!\\
+  \checkmark Easy and convenient to get reason of failure
 \end{frame}
 
 % last slide, in any case
