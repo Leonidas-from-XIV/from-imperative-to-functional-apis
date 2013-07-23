@@ -31,19 +31,6 @@
 %\setbeamertemplate{navigation symbols}{}
 \beamertemplatenavigationsymbolsempty
 
-%\titlegraphic{\includegraphics[width=\textwidth]{nightingdale}}
-
-%\defbeamertemplate*{title page}{rwo}[1][]
-%{
-%  \usebeamerfont{title}\inserttitle\par
-%  \usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par
-%  \bigskip
-%  \usebeamerfont{author}\insertauthor\par
-%  \usebeamerfont{institute}\insertinstitute\par
-%  \usebeamerfont{date}\insertdate\par
-%  \usebeamercolor[fg]{titlegraphic}\inserttitlegraphic
-%}
-
 \defbeamertemplate*{title page}{rwo}[1][]
 {
   \vbox{}
@@ -87,17 +74,14 @@
 \begin{document}
 
 {
-\usebackgroundtemplate%
-{%
+  \usebackgroundtemplate%
+  {%
     \includegraphics[width=\paperwidth,height=\paperheight]{nightingdale}%
-}
-\frame{
-  \titlepage
-}
+  }
+  \frame{\titlepage}
 }
 
-
-\begin{frame}{Some words upfront}
+\begin{frame}
   \begin{alertblock}{Disclaimer}
     I am not a professional OCaml programmer, type theoretician etc.
   \end{alertblock}
@@ -106,10 +90,6 @@
     I am neither a static typing weenie, I like dynamically typed languages
     too, so put your flamewar away (for now).
   \end{alertblock}
-  %\begin{exampleblock}{Comments}
-  %  If you have comments, feel free to ask in the middle. But let's try to
-  %  avoid big detours from the topic, alrite?
-  %\end{exampleblock}
 \end{frame}
 
 \begin{frame}{What is the plan?}
@@ -332,13 +312,11 @@ Couldn't we \example{encode the state} in the type somehow?
   \pause
   But these \alert{can't be extended} if someone wants to add a new state.
   \pause
-  \vspace{2ex}
 
-  Plus, we're lazy.
+  Plus, we're lazy. Let's use \example{open union types} aka polymorphic variants:
   \begin{minted}[gobble=4]{ocaml}
     [`New] [`Configured] [`Opened] [`Closed]
   \end{minted}
-  Let's use open union types aka polymorphic variants.
 \end{frame}
 
 \begin{frame}
@@ -480,7 +458,7 @@ Couldn't we \example{encode the state} in the type somehow?
 \end{frame}
 
 \begin{frame}[fragile]
-  Everything is fun and games until you need to specify a reason for
+  Everything is fun and games until you need to specify a \alert{reason} for
   failure.
 
   What if we could add an error message?
@@ -503,7 +481,7 @@ Couldn't we \example{encode the state} in the type somehow?
       | Failure (f1) -> "Failure at fristfn"
   \end{minted}
 
-  Right. Maybe we can simplify.
+  Right. Maybe we can \example{simplify}…
 
   So I was reading \enquote{Real World Haskell} at that time, turns out
   \texttt{option} is called \enquote{Maybe monad} and \texttt{error}
@@ -516,7 +494,7 @@ Couldn't we \example{encode the state} in the type somehow?
 \end{frame}
 
 \begin{frame}[fragile]
-  So I was reading \enquote{Seven Languages in Seven Weeks}.
+  I was also reading \enquote{Seven Languages in Seven Weeks}.
 
   It introduces an operator called \texttt{bind} aka \texttt{>>=} to
   chain operations on monads.
@@ -526,9 +504,11 @@ Couldn't we \example{encode the state} in the type somehow?
       'b ErrorMonad.t
   \end{minted}
 
-  It takes an error monad wrapping type \texttt{'a}, and a function
+  \texttt{bind} takes an error monad wrapping type \texttt{'a}, and a function
   which takes \texttt{'a} and returns an error monad wrapping
   \texttt{'b} and returns that value.
+
+  Basically an unwrapper function.
 \end{frame}
 
 \begin{frame}[fragile]
@@ -546,15 +526,17 @@ Couldn't we \example{encode the state} in the type somehow?
       | Success (x) -> x
       | Failure (_) -> "Failure in chain"
   \end{minted}
-  The code got a lot easier!
+  The code got a lot \example{easier}!
 \end{frame}
 
 \begin{frame}[fragile]{Aside: Operator tricks}
-  OCaml allows custom operators as long as they follow naming rules.
+  OCaml allows \alert{custom operators} as long as they follow naming rules.
 
   \begin{minted}[gobble=4]{ocaml}
     let (>>=) = bind
   \end{minted}
+
+  Using it is \example{easy}:
 
   \begin{minted}[gobble=4]{ocaml}
     match (firstfn 42) >>= secondfn >>= thirdfn with
