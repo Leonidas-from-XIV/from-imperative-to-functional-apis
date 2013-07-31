@@ -499,9 +499,8 @@ Couldn't we \example{encode the state} in the type somehow?
 
   Right. Maybe we can \example{simplify}…
 
-  So I was reading \enquote{Real World Haskell} at that time, turns out
-  \texttt{option} is called \enquote{Maybe monad} and \texttt{error}
-  is called \enquote{Error monad} there.
+  In Haskell, \texttt{option} is called \enquote{Maybe monad} and 
+  \texttt{error} is called \enquote{Error monad}.
 
   \pause
   \begin{center}
@@ -510,9 +509,7 @@ Couldn't we \example{encode the state} in the type somehow?
 \end{frame}
 
 \begin{frame}[fragile]
-  I was also reading \enquote{Seven Languages in Seven Weeks}.
-
-  It introduces an operator called \texttt{bind} aka \texttt{>>=} to
+  Haskell features an operator called \texttt{bind} aka \texttt{>>=} to
   chain operations on monads.
 
   \begin{minted}[gobble=4]{ocaml}
@@ -570,8 +567,11 @@ Couldn't we \example{encode the state} in the type somehow?
 \end{frame}
 
 % last slide, in any case
-% TODO: make this awful slide less ugly
-\begin{frame}{Follow me}
+{
+\usebackgroundtemplate{\includegraphics[height=\paperheight]{instacode}}%
+\begin{frame}[plain]
+  \begin{columns}
+    \column{0.5\textwidth}
   \begin{block}{Marek Kubica}
     Check out my playthings:
     \begin{itemize}
@@ -580,6 +580,10 @@ Couldn't we \example{encode the state} in the type somehow?
       \item \url{http://xivilization.net/}
     \end{itemize}
   \end{block}
+    \column{0.5\textwidth}
+      % nothing
+  \end{columns}
 \end{frame}
+}
 
 \end{document}
