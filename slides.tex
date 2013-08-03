@@ -8,7 +8,7 @@
 \usepackage{csquotes}
 \usepackage{amssymb}
 
-\mode<presentation>{\usetheme{Copenhagen}}
+\mode<presentation>{\usetheme{rwo}}
 \title{Using static typing features for fun and profit}
 \author{Marek~Kubica}
 \date{6.~August~2013}
@@ -19,17 +19,9 @@
 \setmonofont[Scale=0.8]{Droid Sans Mono Dotted}
 
 \usemintedstyle{tango}
-\usecolortheme{rwo}
 \setbeamerfont{title}{family=\rmfamily}
-%\setbeamertemplate{blocks}[rounded=false]
-%\useinnertheme{default}
-\setbeamertemplate{title page}[default][colsep=-0bp,rounded=false,shadow=\beamer@themerounded@shadow]
 
 \setlength{\parskip}{8pt plus 1pt minus 1pt}
-
-%% get rid of navigation symbols
-%\setbeamertemplate{navigation symbols}{}
-\beamertemplatenavigationsymbolsempty
 
 \defbeamertemplate*{title page}{rwo}[1][]
 {
@@ -56,15 +48,12 @@
       \usebeamerfont{date}\insertdate
     \end{beamercolorbox}\vskip0.5em
     {\usebeamercolor[fg]{titlegraphic}\inserttitlegraphic\par}
-  %\vfill
   \vskip4.0em
-  %\begin{center}
-    \ccby{}\\
-    {\tiny This work is licensed under a
-    \href{http://creativecommons.org/licenses/by/3.0/deed.en_US}%
-    {Creative Commons Attribution 3.0 Unported License}.}
-    \vspace*{-2.5ex}
-  %\end{center}
+  \ccby{}\\
+  {\tiny This work is licensed under a
+  \href{http://creativecommons.org/licenses/by/3.0/deed.en_US}%
+  {Creative Commons Attribution 3.0 Unported License}.}
+  \vspace*{-2.5ex}
 }
 
 

@@ -1,0 +1,30 @@
+\mode<presentation>
+
+% inherit everything from Copenhagen theme
+\usetheme{Copenhagen}
+
+\usecolortheme{rwo}
+
+\setbeamertemplate{title page}[default][colsep=-0bp,rounded=false,shadow=\beamer@themerounded@shadow]
+\setbeamertemplate{itemize item}[triangle]
+\setbeamertemplate{frametitle}[default][right]
+
+%% get rid of navigation symbols
+\setbeamertemplate{navigation symbols}{}
+%\beamertemplatenavigationsymbolsempty
+
+% default split outer theme with slide numbers inserted
+\defbeamertemplate*{footline}{rwo theme}
+{%
+  \leavevmode%
+  \hbox{\begin{beamercolorbox}[wd=.5\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=.3cm plus1fill,rightskip=.3cm]{author in head/foot}%
+    %\usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=.3cm,rightskip=.3cm plus1fil]{title in head/foot}%
+    %\usebeamerfont{title in head/foot}\insertshorttitle
+    \usebeamerfont{title in head/foot}\hfill\insertframenumber\,/\,\inserttotalframenumber
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+\mode<all>
