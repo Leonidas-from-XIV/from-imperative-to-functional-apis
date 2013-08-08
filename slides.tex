@@ -34,7 +34,7 @@
       \else%
         \vskip0.25em%
         {\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par}%
-      \fi%     
+      \fi%
     \end{beamercolorbox}%
   \end{centering}
     \vskip1em\par
@@ -163,13 +163,13 @@
 7fa0c98f8000-7fa0c9af8000 ---p 001a3000 fe:00 4202529                    /usr/lib/libc-2.17.so
 7fa0c9af8000-7fa0c9afc000 r--p 001a3000 fe:00 4202529                    /usr/lib/libc-2.17.so
 7fa0c9afc000-7fa0c9afe000 rw-p 001a7000 fe:00 4202529                    /usr/lib/libc-2.17.so
-7fa0c9afe000-7fa0c9b02000 rw-p 00000000 00:00 0 
+7fa0c9afe000-7fa0c9b02000 rw-p 00000000 00:00 0
 7fa0c9b02000-7fa0c9b23000 r-xp 00000000 fe:00 4203728                    /usr/lib/ld-2.17.so
-7fa0c9cfa000-7fa0c9cfd000 rw-p 00000000 00:00 0 
-7fa0c9d22000-7fa0c9d23000 rw-p 00000000 00:00 0 
+7fa0c9cfa000-7fa0c9cfd000 rw-p 00000000 00:00 0
+7fa0c9d22000-7fa0c9d23000 rw-p 00000000 00:00 0
 7fa0c9d23000-7fa0c9d24000 r--p 00021000 fe:00 4203728                    /usr/lib/ld-2.17.so
 7fa0c9d24000-7fa0c9d25000 rw-p 00022000 fe:00 4203728                    /usr/lib/ld-2.17.so
-7fa0c9d25000-7fa0c9d26000 rw-p 00000000 00:00 0 
+7fa0c9d25000-7fa0c9d26000 rw-p 00000000 00:00 0
 7fff44461000-7fff44482000 rw-p 00000000 00:00 0                          [stack]
 7fff445fe000-7fff44600000 r-xp 00000000 00:00 0                          [vdso]
 ffffffffff600000-ffffffffff601000 r-xp 00000000 00:00 0                  [vsyscall]
@@ -404,7 +404,7 @@ Couldn't we \example{encode the state} in the type somehow?
     \item \texttt{NULL}
   \end{itemize}
   \pause
-  Everytime you return null as a placeholder value, 
+  Everytime you return null as a placeholder value,
   \sout{\textdollar{}DEITY kills a kitten}
   you have to check whether you weren't handed null in return.
 \end{frame}
@@ -479,7 +479,7 @@ Couldn't we \example{encode the state} in the type somehow?
   But pattern matching on every function call sucks because it is
   \alert{tedious}! Just look at this mess:
   \begin{minted}[gobble=4]{ocaml}
-    match firstfn 42 with 
+    match firstfn 42 with
       | Success (x) -> (match secondfn x with
         | Success (y) -> (match thirdfn y with
           | Success (z) -> z
@@ -490,7 +490,7 @@ Couldn't we \example{encode the state} in the type somehow?
 
   Right. Maybe we can \example{simplify}…
 
-  In Haskell, \texttt{option} is called \enquote{Maybe monad} and 
+  In Haskell, \texttt{option} is called \enquote{Maybe monad} and
   \texttt{error} is called \enquote{Error monad}.
 
   \pause
