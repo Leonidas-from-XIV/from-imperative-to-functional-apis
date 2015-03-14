@@ -1,74 +1,34 @@
 \documentclass{beamer}
-\usepackage{fontspec}
 \usepackage{minted}
 \usepackage{tango}
-\usepackage{ccicons}
 \usepackage{tikz}
 \usepackage[normalem]{ulem}
 \usepackage{csquotes}
 \usepackage{amssymb}
 
-\mode<presentation>{\usetheme{rwo}}
-\title{Using static typing features for fun and profit}
-\author{Marek~Kubica}
-\date{6.~August~2013}
-\institute{Lambda Munich}
+\mode<presentation>{\usetheme{m}}
+\title{From Imperative to Functional APIs}
+\author{Marek~Kubica @leonidasfromxiv}
+\date{28.~March~2015}
+\institute{LambdaCon}
 
-\setsansfont{Yanone Kaffeesatz Regular}
-\setmainfont{EB Garamond}
-\setmonofont[Scale=0.8]{Droid Sans Mono Dotted}
+\setsansfont[BoldFont={Lato},ItalicFont={Lato Light Italic}]{Lato Light}
+\newfontfamily\exclaim{Lato Black}
+
+\newfontfamily\ExtraLight{Lato Light}
+\newfontfamily\Light{Lato Light}
+\newfontfamily\Medium{Lato Medium}
 
 \usemintedstyle{tango}
-\setbeamerfont{title}{family=\rmfamily}
 
 \setlength{\parskip}{8pt plus 1pt minus 1pt}
-
-\defbeamertemplate*{title page}{rwo}[1][]
-{
-  \vbox{}
-  \vfill
-  \begin{centering}
-    \begin{beamercolorbox}[sep=8pt,center,#1]{title}
-      \usebeamerfont{title}\inserttitle\par%
-      \ifx\insertsubtitle\@empty%
-      \else%
-        \vskip0.25em%
-        {\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par}%
-      \fi%
-    \end{beamercolorbox}%
-  \end{centering}
-    \vskip1em\par
-    \begin{beamercolorbox}[sep=3pt,#1]{author}
-      \usebeamerfont{author}\insertauthor
-    \end{beamercolorbox}
-    \begin{beamercolorbox}[sep=3pt,#1]{institute}
-      \usebeamerfont{institute}\insertinstitute
-    \end{beamercolorbox}
-    \begin{beamercolorbox}[sep=3pt,#1]{date}
-      \usebeamerfont{date}\insertdate
-    \end{beamercolorbox}\vskip0.5em
-    {\usebeamercolor[fg]{titlegraphic}\inserttitlegraphic\par}
-  \vskip4.0em
-  \ccby{}\\
-  {\tiny This work is licensed under a
-  \href{http://creativecommons.org/licenses/by/3.0/deed.en_US}%
-  {Creative Commons Attribution 3.0 Unported License}.}
-  \vspace*{-2.5ex}
-}
-
 
 \renewcommand{\example}[1]{{\usebeamercolor[fg]{example text} #1}}
 \renewcommand{\ULthickness}[0]{0.23ex}
 
 \begin{document}
 
-{
-  \usebackgroundtemplate%
-  {%
-    \includegraphics[width=\paperwidth,height=\paperheight]{nightingdale}%
-  }
-  \frame{\titlepage}
-}
+\maketitle
 
 \begin{frame}
   \begin{alertblock}{Disclaimer}
@@ -103,7 +63,7 @@
     \item What IS a better API anyway?
   \end{itemize}
   \pause
-  \begin{exampleblock}{My goal for tonight}
+  \begin{exampleblock}{My goal for today}
     Show you that advanced static type features are not (only) academic.
   \end{exampleblock}
 \end{frame}

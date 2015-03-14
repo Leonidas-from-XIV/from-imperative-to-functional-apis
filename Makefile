@@ -1,9 +1,8 @@
-all:
-	latexmk slides.tex
+all: slides.pdf
+
+slides.pdf: slides.tex
+	latexmk $(basename $@)
 
 watch:
 	$(MAKE) all
-	while true; do \
-		inotifywait -q -e modify *.tex *.sty ; \
-		$(MAKE) all ; \
-	done
+	latexmk -pvc slides.tex
