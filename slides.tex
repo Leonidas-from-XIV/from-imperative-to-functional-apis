@@ -33,7 +33,7 @@
 
 \begin{frame}
   \begin{alertblock}{Disclaimer}
-    I am not a professional OCaml programmer, type theoretician etc.
+    I am not a type theoretician etc.
   \end{alertblock}
   \pause
   \begin{alertblock}{Static typing?}
@@ -115,7 +115,7 @@
 \end{frame}
 
 \begin{frame}[fragile]{Double free}
-\begin{minted}[fontsize=\tiny]{text}
+  \begin{minted}[fontsize=\fontsize{6pt}{6pt}]{text}
 *** Error in `./errors': double free or corruption (fasttop): 0x000000000077a010 ***
 ======= Backtrace: =========
 /usr/lib/libc.so.6(+0x788ae)[0x7fa0c97cd8ae]
@@ -124,26 +124,26 @@
 /usr/lib/libc.so.6(__libc_start_main+0xf5)[0x7fa0c9776a15]
 ./errors[0x400479]
 ======= Memory map: ========
-00400000-00401000 r-xp 00000000 fe:01 21244012                           /home/marek/lambda-munich/errors
-00600000-00601000 rw-p 00000000 fe:01 21244012                           /home/marek/lambda-munich/errors
-0077a000-0079b000 rw-p 00000000 00:00 0                                  [heap]
-7fa0c953f000-7fa0c9554000 r-xp 00000000 fe:00 4213606                    /usr/lib/libgcc_s.so.1
-7fa0c9554000-7fa0c9754000 ---p 00015000 fe:00 4213606                    /usr/lib/libgcc_s.so.1
-7fa0c9754000-7fa0c9755000 rw-p 00015000 fe:00 4213606                    /usr/lib/libgcc_s.so.1
-7fa0c9755000-7fa0c98f8000 r-xp 00000000 fe:00 4202529                    /usr/lib/libc-2.17.so
-7fa0c98f8000-7fa0c9af8000 ---p 001a3000 fe:00 4202529                    /usr/lib/libc-2.17.so
-7fa0c9af8000-7fa0c9afc000 r--p 001a3000 fe:00 4202529                    /usr/lib/libc-2.17.so
-7fa0c9afc000-7fa0c9afe000 rw-p 001a7000 fe:00 4202529                    /usr/lib/libc-2.17.so
+00400000-00401000 r-xp 00000000 fe:01 21244012                 /lambdacon/errors
+00600000-00601000 rw-p 00000000 fe:01 21244012                 /lambdacon/errors
+0077a000-0079b000 rw-p 00000000 00:00 0                        [heap]
+7fa0c953f000-7fa0c9554000 r-xp 00000000 fe:00 4213606          /usr/lib/libgcc_s.so.1
+7fa0c9554000-7fa0c9754000 -------p 00015000 fe:00 4213606          /usr/lib/libgcc_s.so.1
+7fa0c9754000-7fa0c9755000 rw-p 00015000 fe:00 4213606          /usr/lib/libgcc_s.so.1
+7fa0c9755000-7fa0c98f8000 r-xp 00000000 fe:00 4202529          /usr/lib/libc-2.17.so
+7fa0c98f8000-7fa0c9af8000 -------p 001a3000 fe:00 4202529          /usr/lib/libc-2.17.so
+7fa0c9af8000-7fa0c9afc000 r-----p 001a3000 fe:00 4202529          /usr/lib/libc-2.17.so
+7fa0c9afc000-7fa0c9afe000 rw-p 001a7000 fe:00 4202529          /usr/lib/libc-2.17.so
 7fa0c9afe000-7fa0c9b02000 rw-p 00000000 00:00 0
-7fa0c9b02000-7fa0c9b23000 r-xp 00000000 fe:00 4203728                    /usr/lib/ld-2.17.so
+7fa0c9b02000-7fa0c9b23000 r-xp 00000000 fe:00 4203728          /usr/lib/ld-2.17.so
 7fa0c9cfa000-7fa0c9cfd000 rw-p 00000000 00:00 0
 7fa0c9d22000-7fa0c9d23000 rw-p 00000000 00:00 0
-7fa0c9d23000-7fa0c9d24000 r--p 00021000 fe:00 4203728                    /usr/lib/ld-2.17.so
-7fa0c9d24000-7fa0c9d25000 rw-p 00022000 fe:00 4203728                    /usr/lib/ld-2.17.so
+7fa0c9d23000-7fa0c9d24000 r-----p 00021000 fe:00 4203728          /usr/lib/ld-2.17.so
+7fa0c9d24000-7fa0c9d25000 rw-p 00022000 fe:00 4203728          /usr/lib/ld-2.17.so
 7fa0c9d25000-7fa0c9d26000 rw-p 00000000 00:00 0
-7fff44461000-7fff44482000 rw-p 00000000 00:00 0                          [stack]
-7fff445fe000-7fff44600000 r-xp 00000000 00:00 0                          [vdso]
-ffffffffff600000-ffffffffff601000 r-xp 00000000 00:00 0                  [vsyscall]
+7fff44461000-7fff44482000 rw-p 00000000 00:00 0                [stack]
+7fff445fe000-7fff44600000 r-xp 00000000 00:00 0                [vdso]
+ffffffffff600000-ffffffffff601000 r-xp 00000000 00:00 0        [vsyscall]
 zsh: abort (core dumped)  ./errors foo
 \end{minted}
 \end{frame}
@@ -193,13 +193,13 @@ zsh: abort (core dumped)  ./errors foo
 
 \begin{frame}[fragile]{Fix up the handle types}
   How to prevent writing to read handles and reading from write handles?
-  \begin{minted}[gobble=4]{ocaml}
+  \begin{minted}[gobble=4,fontsize=\small]{ocaml}
     external read_new: unit -> archive = "ost_read_new"
     external write_new: unit -> archive = "ost_write_new"
   \end{minted}
   \pause
   Yup, create different handle types.
-  \begin{minted}[gobble=4]{ocaml}
+  \begin{minted}[gobble=4,fontsize=\small]{ocaml}
     type r = archive
     type w = (archive * write_buffer_ptr * written_ptr)
   \end{minted}
@@ -321,7 +321,7 @@ Couldn't we \example{encode the state} in the type somehow?
   \pause
 
   We create a module and only say:
-  \begin{minted}{ocaml}
+  \begin{minted}[gobble=2,fontsize=\small]{ocaml}
   module Handle : sig
     type 'a r
     (* our signatures *)
@@ -350,20 +350,20 @@ Couldn't we \example{encode the state} in the type somehow?
 
 \begin{frame}[fragile]{Have you ever seen this?}
   Ever used Python?
-  \begin{minted}[gobble=4]{text}
+  \begin{minted}[gobble=4,fontsize=\footnotesize]{text}
     Traceback (most recent call last):
     File "<stdin>", line 1, in <module>
     AttributeError: 'NoneType' object has no attribute 'foo'
   \end{minted}
   \pause
   Ever touched Java?
-  \begin{minted}[gobble=4]{text}
+  \begin{minted}[gobble=4,fontsize=\footnotesize]{text}
     Exception in thread "main" java.lang.NullPointerException
     at NPE.main(NPE.java:8)
   \end{minted}
   \pause
   Ever seen C?
-  \begin{minted}[gobble=4]{text}
+  \begin{minted}[gobble=4,fontsize=\footnotesize]{text}
     zsh: segmentation fault (core dumped)  ./errors
   \end{minted}
 \end{frame}
@@ -475,7 +475,8 @@ Couldn't we \example{encode the state} in the type somehow?
   chain operations on monads.
 
   \begin{minted}[gobble=4]{ocaml}
-    val bind: 'a ErrorMonad.t -> ('a -> 'b ErrorMonad.t) ->
+    val bind: 'a ErrorMonad.t ->
+      ('a -> 'b ErrorMonad.t) ->
       'b ErrorMonad.t
   \end{minted}
 
@@ -539,7 +540,7 @@ Couldn't we \example{encode the state} in the type somehow?
     \begin{itemize}
       \item \href{https://github.com/Leonidas-from-XIV}{Leonidas-from-XIV} on GitHub
       \item Leonidas nearly everywhere else
-      \item \url{http://xivilization.net/}
+      \item \url{https://xivilization.net/}
     \end{itemize}
   \end{block}
     \column{0.5\textwidth}
