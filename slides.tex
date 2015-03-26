@@ -13,6 +13,7 @@
 \institute{\includegraphics[width=1.5cm]{lambdacon}}
 
 \renewcommand{\itemBullet}{\hbox{\vrule width 1ex height 1ex}}
+%\renewcommand{\itemBullet}{\blacksquare}
 \setsansfont[BoldFont={Lato},ItalicFont={Lato Light Italic}]{Lato Light}
 \newfontfamily\exclaim{Lato Black}
 
@@ -80,11 +81,9 @@
 \end{frame}
 
 \begin{frame}[fragile]{Static typing the C way}
-  Let's check how C handles look like. How about checking libarchive.
-  \begin{minted}[gobble=4]{c}
-    __LA_DECL struct archive* archive_read_new(void);
-    __LA_DECL struct archive* archive_write_new(void);
-  \end{minted}
+  Let's check how C handles look like. How does libarchive handle this?
+  $\underbrace{\texttt{\_\_LA\_DECT struct archive*}}_{\text{C return type}} \underbrace{archive\_read\_new}_{\text{Function name}}(\underbrace{void}_{\text{Argument type}});$
+  $\underbrace{\texttt{\_\_LA\_DECT struct archive*}}_{\text{C return type}} \underbrace{archive\_write\_new}_{\text{Function name}}(\underbrace{void}_{\text{Argument type}});$
   \begin{itemize}
     \item Opaque pointer to some struct
     \item Write handles and read handles have the same type
@@ -167,8 +166,9 @@ zsh: abort (core dumped)  ./errors foo
 
 \begin{frame}{Not to gripe on libarchive}
   \begin{exampleblock}{Public Service Announcement}
-    libarchive is a rather well designed library. Rather idiomatic C, so don't
-    think this is a deliberately bad example. It is how things are in C land.
+    libarchive is a rather well designed library. Mostly idiomatic C, so don't
+    think this is a deliberately bad example. It is how things \emph{are} in C
+    land.
   \end{exampleblock}
 
   \begin{itemize}
@@ -203,14 +203,13 @@ zsh: abort (core dumped)  ./errors foo
     type r = archive
     type w = (archive * write_buffer_ptr * written_ptr)
   \end{minted}
-  So now we have two different types to represent handles.
+  So now we have distinct types to represent handles.
 \end{frame}
 
 \begin{frame}{Achievement unlocked!}
   \begin{center}
-    {\Huge Type safety improved!}
+    \includegraphics[width=\textwidth]{achivement-read-handles}
   \end{center}
-  \checkmark Writing read handles disallowed
 
   But of course you aren't attending the talk for this \alert{trivial}
   epiphany. We can do this easily in C as well! Let's do better.
@@ -336,7 +335,7 @@ Couldn't we \example{encode the state} in the type somehow?
 
 \begin{frame}{Achievement unlocked!}
   \begin{center}
-    {\Huge Made API misuse a type error!}
+    \includegraphics[width=\textwidth]{achivement-api-misuse}
   \end{center}
   \checkmark Writing read handles disallowed\\
   \checkmark Using the proper handle in an incorrect way disallowed
@@ -430,7 +429,7 @@ Couldn't we \example{encode the state} in the type somehow?
 
 \begin{frame}{Achievement unlocked!}
   \begin{center}
-    {\Huge Forgetting to check for NULL is a type error!}
+    \includegraphics[width=\textwidth]{achivement-null-pointer}
   \end{center}
   \checkmark No more Null pointer failures on runtime!
 \end{frame}
@@ -498,7 +497,8 @@ Couldn't we \example{encode the state} in the type somehow?
   We can use it like this:
 
   \begin{minted}[gobble=4]{ocaml}
-    match (bind (bind (firstfn 42) secondfn) thirdfn) with
+    match (bind (bind (firstfn 42) secondfn) thirdfn)
+    with
       | Success (x) -> x
       | Failure (_) -> "Failure in chain"
   \end{minted}
@@ -523,7 +523,7 @@ Couldn't we \example{encode the state} in the type somehow?
 
 \begin{frame}{Achievement unlocked!}
   \begin{center}
-    {\Huge Statically typed error handling}
+    \includegraphics[width=\textwidth]{achivement-error-handling}
   \end{center}
   \checkmark No more Null pointer failures on runtime!\\
   \checkmark Easy and convenient to get reason of failure
@@ -534,12 +534,14 @@ Couldn't we \example{encode the state} in the type somehow?
 \usebackgroundtemplate{\includegraphics[height=\paperheight]{instacode}}%
 \begin{frame}[plain]
   \begin{columns}
-    \column{0.5\textwidth}
+    \column{0.6\textwidth}
   \begin{block}{Marek Kubica}
+    \color{white}
     Check out my playthings:
     \begin{itemize}
+      \color{white}
       \item \href{https://github.com/Leonidas-from-XIV}{Leonidas-from-XIV} on GitHub
-      \item Leonidas nearly everywhere else
+      \item \href{https://twiter.com/leonidasfromxiv}{@leonidasfromxiv}
       \item \url{https://xivilization.net/}
     \end{itemize}
   \end{block}
