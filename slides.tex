@@ -98,13 +98,13 @@
   \alert{But what if we screw up?}
 \end{frame}
 
-\begin{frame}[fragile]{Segfault}
+\begin{frame}[fragile]
   \begin{minted}[gobble=4]{text}
     zsh: segmentation fault (core dumped)  ./errors
   \end{minted}
 \end{frame}
 
-\begin{frame}[fragile]{Double free}
+\begin{frame}[fragile]
   \begin{minted}[fontsize=\fontsize{6pt}{6pt}]{text}
 *** Error in `./errors': double free or corruption (fasttop): 0x000000000077a010 ***
 ======= Backtrace: =========
@@ -145,7 +145,8 @@ zsh: abort (core dumped)  ./errors foo
   \alert{Then it segfaults.}
 \end{frame}
 
-\begin{frame}{Lots of things can go wrong}
+\begin{frame}
+  Lots of things can go wrong
   \begin{itemize}
     \item Reading from handle that is not open *
     \item Writing to a read handle
@@ -155,7 +156,9 @@ zsh: abort (core dumped)  ./errors foo
   * this actually happened
 \end{frame}
 
-\begin{frame}{Not to gripe on libarchive}
+\begin{frame}
+  Not to gripe on libarchive…
+
   \begin{exampleblock}{Public Service Announcement}
     libarchive is a rather well designed library. Mostly idiomatic C, so don't
     think this is a deliberately bad example. It is how things \emph{are} in C
@@ -176,7 +179,7 @@ zsh: abort (core dumped)  ./errors foo
 
 \begin{frame}
   \begin{center}
-    {\fontsize{56pt}{54pt}\selectfont \example{Yes}}\\
+    {\fontsize{63pt}{1em}\selectfont \example{\textbf{Yes}}}\\
     \pause
     {\scriptsize (obviously)}
   \end{center}
@@ -359,16 +362,18 @@ Couldn't we \example{encode the state} in the type somehow?
   \end{minted}
 \end{frame}
 
-\begin{frame}{You know whose fault it is!}
+\begin{frame}
+  You know whose fault it is!
   \begin{itemize}
     \item \texttt{null}
     \item \texttt{None}
     \item \texttt{NULL}
+    \item \texttt{nil}
   \end{itemize}
   \pause
-  Everytime you return null as a placeholder value,
+  Everytime you return NULL as a placeholder value,
   \sout{\textdollar{}DEITY kills a kitten}
-  you have to check whether you weren't handed null in return.
+  you have to check whether you weren't handed NULL in return.
 \end{frame}
 
 \begin{frame}
@@ -390,8 +395,8 @@ Couldn't we \example{encode the state} in the type somehow?
 \end{frame}
 
 \begin{frame}[fragile]{Attempt two: Option types}
-  Observation: everythime we return NULL, we either return something
-  meaningful or an invalid placeholder.
+  Observation: when we return NULL, we either return something
+  meaningful or a marker that there was nothing to return.
 
   We might even say:
   \begin{minted}[gobble=4]{ocaml}
@@ -457,7 +462,7 @@ Couldn't we \example{encode the state} in the type somehow?
 
   \pause
   \begin{center}
-    {\Large \alert{BAM, SCARY MONADS!}}
+    {\Large \alert{\textbf{BAM, SCARY MONADS!}}}
   \end{center}
 \end{frame}
 
@@ -544,11 +549,12 @@ Couldn't we \example{encode the state} in the type somehow?
   \begin{minted}[gobble=4]{ocaml}
     type division_error = Division_by_zero | Overflow
   \end{minted}
-  This works in this case, but what if we want to reuse constructors?
+  This \example{works} in this case, but what if we want to \example{reuse}
+  constructors?
   \begin{minted}[gobble=4]{ocaml}
     type multiplication_error = Overflow
   \end{minted}
-  Does not compile. Each constructor can only be of \emph{one} type.
+  \alert{Does not compile}. Each constructor can only be of \emph{one} type.
 \end{frame}
 
 \begin{frame}[fragile]{Polymorphic variants to the rescue, again}
