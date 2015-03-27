@@ -5,6 +5,7 @@
 \usepackage[normalem]{ulem}
 \usepackage{csquotes}
 \usepackage{amssymb}
+\usepackage{wasysym}
 
 \mode<presentation>{\usetheme{m}}
 \title{From Imperative to Functional APIs}
@@ -32,15 +33,14 @@
 
 \maketitle
 
-\begin{frame}
-  \begin{alertblock}{Disclaimer}
-    I am not a type theoretician etc.
-  \end{alertblock}
-  \pause
-  \begin{alertblock}{Static typing?}
-    I am neither a static typing weenie, I like dynamically typed languages
-    too, so put your flamewar away (for now).
-  \end{alertblock}
+\begin{frame}{A word for the sponsors}
+  \includegraphics[width=\textwidth]{stylefruits}
+  \begin{itemize}
+    \item They sponsored me going to this conference
+    \item Jan Stępień is holding a talk in the currying hall at 11:00
+    \item … and a workshop at 14:00!
+    \item Thanks, stylefruits!
+  \end{itemize}
 \end{frame}
 
 \begin{frame}{Who am I?}
@@ -57,22 +57,13 @@
   \end{columns}
 \end{frame}
 
-\begin{frame}{A word for the sponsors}
-  \includegraphics[width=\textwidth]{stylefruits}
-  \begin{itemize}
-    \item They sponsored me going to this conference
-    \item Jan Stępień is holding a talk in the currying hall at 11:00
-    \item … and a workshop at 14:00!
-    \item Thanks, stylefruits!
-  \end{itemize}
-\end{frame}
-
-\begin{frame}
+\begin{frame}{So, why?}
   \begin{itemize}
     \item Data compression support in OCaml is… kinda meh
-    \item Using OCaml FFI to interface to libarchive
+    \item Using OCaml foreign function interface to talk to libarchive
+    \item Make it a bachelor thesis!
     \item Thought I might as well create a better API
-    \item What IS a better API anyway?
+    \item What \emph{IS} a better API anyway?
   \end{itemize}
   \pause
   \begin{exampleblock}{My goal for today}
@@ -297,17 +288,18 @@ Couldn't we \example{encode the state} in the type somehow?
 \end{frame}
 
 \begin{frame}
-  Great, so now we can create functions that take handles of the correct state.
+  Great, so now we can create functions that \emph{require} handles of the correct
+  state.
 
-  e.g. a read function that only works on \texttt{[`Opened] read\_handle}.
+  e.g. a \texttt{read} function that only works on \texttt{[`Opened] read\_handle}.
 
   \pause
   \alert{Foiled again!}
   \pause
 
-  The OCaml compiler is too smart, it knows that \texttt{[`Opened] read\_handle} is the
-  same type as \texttt{[`New] read\_handle} therefore every function which takes
-  the \texttt{[`Opened]} handle takes every other type too.
+  The OCaml compiler is too smart, it knows that \texttt{[`Opened] read\_handle} is
+  the same type as \texttt{[`New] read\_handle}. Therefore every function which takes
+  the \texttt{[`Opened]} handle accepts every other type of handle as well.
 \end{frame}
 
 \begin{frame}[fragile]{Enter phantoms}
@@ -529,13 +521,94 @@ Couldn't we \example{encode the state} in the type somehow?
   \checkmark Easy and convenient to get reason of failure
 \end{frame}
 
+\begin{frame}[fragile]{He who controls the errors, controls the universe}
+  Sometimes, errors will happen
+  \begin{minted}[gobble=4]{ocaml}
+    let divide a b =
+      match b with
+      | 0 -> Failure "division"
+      | b -> Success (a / b)
+
+    let handle_user_input () =
+      match divide 42 (read_int ()) with
+      | Success res -> Printf.sprintf "Got %d" res
+      | Failure "division_by_zero" -> "Divided by zero"
+  \end{minted}
+  Can you spot the error?\pause
+
+  \texttt{divide : int -> int -> (int, string) err}
+\end{frame}
+
+\begin{frame}[fragile]
+  We could define a type constructor for each error case:
+  \begin{minted}[gobble=4]{ocaml}
+    type division_error = Division_by_zero | Overflow
+  \end{minted}
+  This works in this case, but what if we want to reuse constructors?
+  \begin{minted}[gobble=4]{ocaml}
+    type multiplication_error = Overflow
+  \end{minted}
+  Does not compile. Each constructor can only be of \emph{one} type.
+\end{frame}
+
+\begin{frame}[fragile]{Polymorphic variants to the rescue, again}
+  Polymorphic variant constructors can be composed into types:
+  \begin{minted}[gobble=4]{ocaml}
+    type division_error = [
+      | `Division_by_zero
+      | `Overflow
+      ]
+  \end{minted}
+  Works like sets. OCaml does it automatically if functions return variants.
+\end{frame}
+
+\begin{frame}[fragile]
+  Let's fix the program
+  \begin{minted}[gobble=4]{ocaml}
+    let divide a b =
+      match b with
+      | 0 -> Failure `Division
+      | b -> Success (a / b)
+
+    let handle_user_input () =
+      match divide 42 (read_int ()) with
+      | Success res -> Printf.sprintf "Got %d" res
+      | Failure `Division -> "Divided by zero"
+  \end{minted}
+
+  $\texttt{divide: int -> int -> (int,}
+  \underbrace{\texttt{[> `Division ]}}_{\text{our error variant}}
+    \texttt{) err}$
+\end{frame}
+
+\begin{frame}{Achievement unlocked!}
+  \begin{center}
+    \includegraphics[width=\textwidth]{achivement-error-types}
+  \end{center}
+  \checkmark Possible errors can be seen in signatures\\
+  \checkmark Type system can warn when errors not handled
+\end{frame}
+
+\begin{frame}{How to continue from here}
+  There are many more tricks on how you can use the type system, to make illegal
+  state unrepresentable, e.g. Generalized Algebraic Data Types (GADTs).
+
+  But take care: the API might turn out to be \emph{too complicated}. Please, use
+  common sense*.
+
+  \pause
+  * if not applicable, emulate idioms from good APIs in your preferred programming
+  language \smiley{}
+\end{frame}
+
+
 % last slide, in any case
 {
 \usebackgroundtemplate{\includegraphics[height=\paperheight]{instacode}}%
 \begin{frame}[plain]
   \begin{columns}
     \column{0.6\textwidth}
-  \begin{block}{Marek Kubica}
+  \begin{block}{\color{white}Marek Kubica}
     \color{white}
     Check out my playthings:
     \begin{itemize}
